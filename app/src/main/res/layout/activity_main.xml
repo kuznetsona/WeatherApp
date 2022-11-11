@@ -6,20 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
     android:orientation="vertical"
-    android:background="#E2EBF2">
+    android:background="#2E3643">
 
-
-    <TextView
-        android:id="@+id/Location"
-        android:paddingTop="25dp"
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/restartImageButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Location"
-        android:gravity="center"
-        android:textSize="20sp"/>
+        android:layout_gravity="right"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:background="#2E3643"
+        app:srcCompat="@drawable/ic_baseline_restart_alt_24" />
+
+        <TextView
+            android:id="@+id/locationTextView"
+            android:paddingTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/timeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Time"
@@ -27,7 +37,7 @@
         android:textSize="10sp"/>
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/iconImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_wb_sunny_24"
@@ -35,7 +45,7 @@
         android:paddingTop="50dp"/>
 
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/tempTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="20°"
@@ -44,7 +54,7 @@
         android:paddingTop="20dp"/>
 
     <TextView
-        android:id="@+id/precipitation"
+        android:id="@+id/precipitationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sunny"
@@ -53,7 +63,7 @@
         android:textSize="25sp"/>
 
     <TextView
-        android:id="@+id/wind"
+        android:id="@+id/windTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wind"
@@ -70,17 +80,15 @@
         >
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/windImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-
             android:src="@drawable/ic_baseline_air_24"
 
         />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/windSpeedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0 m/s"
