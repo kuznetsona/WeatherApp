@@ -1,5 +1,6 @@
 package com.example.weatherapp.model
 
+
 class Weather {
     var location : String? = null
     var time : String? = null
