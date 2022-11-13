@@ -64,20 +64,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getWeather() {
-        val url = "https://api.openweathermap.org/data/2.5/weather?q=moscow,ru&appid=e34e4c19711deb09f38f50619aa775c1"
+        val url = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&q=Yekaterinburg,ru&appid=e34e4c19711deb09f38f50619aa775c1"
 
         val request = JsonObjectRequest(
             Request.Method.GET,
             url, null, { response ->
                 try {
-                    val jsonObjectTemp = response.getJSONObject("main")
-                    val temp = (jsonObjectTemp.getString("temp").toFloat() - 273.15).toInt().toString()
+                    //вынести в отдельный код посторяющиеся части
+                    val jsonArray = response.getJSONArray("list")
+                    val jsonObjectTemp = jsonArray.getJSONObject(0).getJSONObject("main")
+                    val temp =
+                        (jsonObjectTemp.getString("temp").toFloat() - 273.15).toInt().toString()
                     weather.temp = temp
 
-                    val jsonObjectPrecipitation = response.getJSONObject("wind")
-                    val windSpeed = (jsonObjectPrecipitation.getString("speed")).toFloat().toInt().toString()
+
+                    val jsonObjectLocation = response.getJSONObject("city").getString("name")
+                    val location = jsonObjectLocation.toString()
+                    weather.location = location
+
+                    //привести в нормальный формат даты
+                    val jsonObjectTime = jsonArray.getJSONObject(0).getString("dt_txt")
+                    val time = jsonObjectTime.toString().split(" ")[0]
+                    weather.time = time
+
+
+                    val jsonObjectPrecipitation = jsonArray.getJSONObject(0)
+                        .getJSONArray("weather").getJSONObject(0)
+                    val precipitation = jsonObjectPrecipitation.getString("main").toString()
+                    weather.precipitation = precipitation
+
+                    val jsonObjectWindSpeed = jsonArray.getJSONObject(0)
+                        .getJSONObject("wind").getString("speed")
+                    Log.d("jsonObjectWindSpeed:", jsonObjectWindSpeed.toString())
+                    val windSpeed = jsonObjectWindSpeed.toFloat().toInt().toString()
                     weather.windSpeed = windSpeed
 
+                    /*for (i in 1 until 7) {
+                        val jsonObjectTemp = jsonArray.getJSONObject(i).getJSONObject("main")
+                        Log.d("getJSONObject", jsonObjectTemp.toString())
+                        val temp =
+                            (jsonObjectTemp.getString("temp").toFloat() - 273.15).toInt().toString()
+                        weather.temp = temp
+
+                        /*val jsonObjectPrecipitation = response.getJSONObject("wind")
+                        val windSpeed =
+                            (jsonObjectPrecipitation.getString("speed")).toFloat().toInt()
+                                .toString()
+                        weather.windSpeed = windSpeed*/
+                    }*/
 
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -90,9 +124,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUi() {
 
-        tempTextView!!.text = weather.temp.toString()
-        //locationTextView!!.text = "" + weather.location.toString()
-        windSpeedTextView!!.text = weather.windSpeed.toString() + " m/s"
+        tempTextView!!.text = weather.temp.toString() + "°"
+        locationTextView!!.text = weather.location.toString()
+        windSpeedTextView!!.text = weather.windSpeed + " m/s"
+        timeTextView!!.text = weather.time.toString()
+        precipitationTextView!!.text = weather.precipitation.toString()
     }
 
 }
