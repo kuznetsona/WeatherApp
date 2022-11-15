@@ -6,398 +6,351 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
     android:orientation="vertical"
-    android:background="#2E3643">
+    android:background="@color/background">
 
-    <ImageButton
-        android:id="@+id/restartImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:paddingTop="10dp"
-        android:paddingEnd="10dp"
-        android:background="#2E3643"
-        app:srcCompat="@drawable/ic_baseline_restart_alt_24" />
-
-        <TextView
-            android:id="@+id/locationTextView"
-            android:paddingTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Location"
-            android:gravity="center"
-            android:textSize="20sp"/>
-
-
-    <TextView
-        android:id="@+id/timeTextView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Now"
-        android:gravity="center"
-        android:textSize="10sp"/>
-
-    <ImageView
-        android:id="@+id/iconImageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_wb_sunny_24"
-        android:gravity="center"
-        android:paddingTop="50dp"/>
-
-    <TextView
-        android:id="@+id/tempTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="20°"
-        android:gravity="center"
-        android:textSize="55sp"
-        android:paddingTop="20dp"/>
-
-    <TextView
-        android:id="@+id/precipitationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sunny"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:textSize="25sp"/>
-
-    <TextView
-        android:id="@+id/windTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Wind"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:textSize="20sp"/>
-
-    <LinearLayout
-        android:paddingTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
-
-        <ImageView
-            android:id="@+id/windImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_air_24"
-
-        />
-
-        <TextView
-            android:id="@+id/windSpeedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 m/s"
-            android:textSize="15sp"
-            android:paddingStart="7dp"/>
-    </LinearLayout>
-
-
-
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:paddingBottom="30dp"
-        android:paddingTop="20dp">
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@color/background"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingStart="40dp"
-            android:paddingEnd="40dp">
 
+            >
+
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                 />
+
+
+            <ImageButton
+                android:id="@+id/restartImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@color/background"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                app:srcCompat="@drawable/ic_baseline_restart_alt_24" />
+
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="Location"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/timeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Now"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/iconImageView"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:src="@drawable/ic_baseline_wb_sunny_24"
+                 />
+
+            <TextView
+                android:id="@+id/tempTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:text="20°"
+                android:textSize="55sp" />
+
+            <TextView
+                android:id="@+id/precipitationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:text="Sunny"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/windTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="15dp"
+                android:text="Wind"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/today_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
+                android:paddingTop="5dp">
 
                 <ImageView
-                    android:id="@+id/today_precipitation"
+                    android:id="@+id/windImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_air_24"
 
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
                     />
 
                 <TextView
-                    android:id="@+id/today_temp"
+                    android:id="@+id/windSpeedTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/tomorrow_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
+                    android:paddingStart="7dp"
+                    android:text="0 m/s"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/tomorrow_precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
-
-                <TextView
-                    android:id="@+id/tomorrow_temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
-
-
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
+    </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/third_date"
-                    android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewTopBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:backgroundTint="@color/night_background"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:onClick="makeToday">
+
+            <TextView
+                android:id="@+id/today_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Tue, Apr 14"
+                android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/today_precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:src="@drawable/ic_baseline_ac_unit_24"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/today_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingStart="2dp"
+                        android:text="20° / 8°"
+                        android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:onClick="makeTomorrow">
 
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/tomorrow_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
 
-                <ImageView
-                    android:id="@+id/third_precipitation"
-                    android:layout_width="wrap_content"
+                        android:gravity="left"
+                        android:text="Tue, Apr 14"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/tomorrow_precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:src="@drawable/ic_baseline_ac_unit_24"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tomorrow_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingStart="2dp"
+                        android:text="20° / 8°"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:onClick="makeThird">
 
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
+                    <TextView
+                        android:id="@+id/third_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
 
-                <TextView
-                    android:id="@+id/third_temp"
-                    android:layout_width="wrap_content"
+                        android:gravity="left"
+                        android:text="Tue, Apr 14"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/third_precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:src="@drawable/ic_baseline_ac_unit_24"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/third_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingStart="2dp"
+                        android:text="20° / 8°"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:onClick="makeFourth">
+
+                    <TextView
+                        android:id="@+id/fourth_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:gravity="left"
+                        android:text="Tue, Apr 14"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/fourth_precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:src="@drawable/ic_baseline_ac_unit_24"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/fourth_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingStart="2dp"
+                        android:text="20° / 8°"
+                        android:textSize="15sp" />
 
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/fourth_date"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:onClick="makeFifth"
+                    android:paddingBottom="10dp">
 
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/fifth_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="Tue, Apr 14"
+                        android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/fourth_precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    <ImageView
+                        android:id="@+id/fifth_precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
 
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
+                        android:src="@drawable/ic_baseline_ac_unit_24"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/fourth_temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/fifth_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:id="@+id/fifth_precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
-
-                <TextView
-                    android:id="@+id/fifth_temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
+                    <TextView
+                        android:id="@+id/fifth_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingStart="2dp"
+                        android:text="20° / 8°"
+                        android:textSize="15sp" />
 
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/sixth_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:id="@+id/sixth_precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
-
-                <TextView
-                    android:id="@+id/sixth_temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
+                </LinearLayout>
 
 
-            </LinearLayout>
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/seventh_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:gravity="left"
-                    android:text="Tue, Apr 14"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:id="@+id/seventh_precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:src="@drawable/ic_baseline_ac_unit_24"
-                    android:textSize="15sp"
-                    />
-
-                <TextView
-                    android:id="@+id/seventh_temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="2dp"
-                    android:text="20°"
-                    android:textSize="15sp"
-                    />
-
-
-            </LinearLayout>
-
-
-            </LinearLayout>
-
-        </ScrollView>
+    </androidx.cardview.widget.CardView>
 
 
 

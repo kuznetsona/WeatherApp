@@ -3,6 +3,10 @@ package com.example.weatherapp.model
 
 class Weather {
     var location : String? = null
+
+    var lat: Double = 0.0
+    var lon: Double = 0.0
+
     var time : String? = null
     var icon : String? = null
     var temp : String? = null
@@ -27,12 +31,23 @@ class Weather {
     var sixthPrecipitation : String? = null
     var seventhPrecipitation : String? = null
 
-    var todayTemp : String? = null
-    var tomorrowTemp : String? = null
-    var thirdTemp : String? = null
-    var fourthTemp : String? = null
-    var fifthTemp : String? = null
-    var sixthTemp : String? = null
-    var seventhTemp : String? = null
+    var todayTempMax : String? = null
+    var tomorrowTempMax : String? = null
+    var thirdTempMax : String? = null
+    var fourthTempMax : String? = null
+    var fifthTempMax : String? = null
+    var sixthTempMax : String? = null
+    var seventhTempMax : String? = null
+
+    var todayTempMin : String? = null
+    var tomorrowTempMin : String? = null
+    var thirdTempMin : String? = null
+    var fourthTempMin : String? = null
+    var fifthTempMin : String? = null
+    var sixthTempMin : String? = null
+    var seventhTempMin : String? = null
+
+
+
 
 }
