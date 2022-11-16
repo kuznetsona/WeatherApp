@@ -1,33 +1,29 @@
 package com.example.weatherapp.activities
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.icu.number.NumberFormatter.with
+import android.graphics.Movie
 import android.location.Location
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.weatherapp.BuildConfig
-import com.example.weatherapp.DialogManager
+import com.example.weatherapp.*
 import com.example.weatherapp.R
-import com.example.weatherapp.date
-import com.example.weatherapp.model.Weather
+import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.model.WeatherData
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -35,12 +31,8 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.*
 import org.json.JSONException
-import java.nio.file.Files.size
-import java.text.DateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,7 +52,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var restartImageButton: ImageButton
     lateinit var searchImageButton: ImageButton
 
-    //_______________________________________
+
+    lateinit var recyclerView: RecyclerView
+    lateinit var weatherAdapter: WeatherAdapter
+    var weatherData: ArrayList<WeatherData> = arrayListOf()
+
+
+    /*
     lateinit var todayDate: TextView
     lateinit var tomorrowDate: TextView
     lateinit var thirdDate: TextView
@@ -78,8 +76,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var thirdTemp: TextView
     lateinit var fourthTemp: TextView
     lateinit var fifthTemp: TextView
-    //_______________________________________
-    private var isLocationUpdatesActive = false
+    */
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var settingsClient: SettingsClient? = null
@@ -91,24 +88,24 @@ class MainActivity : AppCompatActivity() {
     private var currentLocation: Location? = null
 
 
-
     lateinit var url: String
 
-    private val weather = Weather()
-
     private var requestQueue: RequestQueue? = null
-    //private var requestQueueCity: RequestQueue? = null
 
-    var weatherData: ArrayList<WeatherData> = arrayListOf()
 
     lateinit var latThis: String
     lateinit var lonThis: String
 
     var locationCity = ""
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
 
 
         fusedLocationClient = LocationServices
@@ -133,7 +130,14 @@ class MainActivity : AppCompatActivity() {
         windSpeedTextView = findViewById(R.id.windSpeedTextView)
         restartImageButton = findViewById(R.id.restartImageButton)
         searchImageButton = findViewById(R.id.searchImageButton)
-        //__________________________________________________________________________
+
+
+
+        recyclerView = binding.weekRecyclerView
+        //weatherAdapter = WeatherAdapter()
+        //recyclerView.adapter = weatherAdapter
+
+        /*
         todayDate = findViewById(R.id.today_date)
         tomorrowDate = findViewById(R.id.tomorrow_date)
         thirdDate = findViewById(R.id.third_date)
@@ -151,22 +155,22 @@ class MainActivity : AppCompatActivity() {
         thirdTemp = findViewById(R.id.third_temp)
         fourthTemp = findViewById(R.id.fourth_temp)
         fifthTemp = findViewById(R.id.fifth_temp)
-        //__________________________________________________________________________
+        */
 
         requestQueue = Volley.newRequestQueue(this)
 
-        restartImageButton.setOnClickListener{
+        restartImageButton.setOnClickListener {
             weatherData.clear()
             defineCity()
 
         }
 
-        searchImageButton.setOnClickListener{
+        searchImageButton.setOnClickListener {
             weatherData.clear()
             DialogManager.searchByNameDialog(this,
-                object : DialogManager.Listener{
+                object : DialogManager.Listener {
                     override fun onClick(name: String?) {
-                        if(name != null) {
+                        if (name != null) {
                             locationCity = name
                             parseDayWeather()
                         }
@@ -175,8 +179,6 @@ class MainActivity : AppCompatActivity() {
                 })
 
         }
-
-
 
 
     }
@@ -193,15 +195,15 @@ class MainActivity : AppCompatActivity() {
         val requestCity = JsonArrayRequest(
             Request.Method.GET,
             urlDefineCity, null, { response ->
-            try {
-                locationCity = response.getJSONObject(0).getString("name").toString()
-                Log.d("locationCity_defineCity", locationCity)
+                try {
+                    locationCity = response.getJSONObject(0).getString("name").toString()
+                    Log.d("locationCity_defineCity", locationCity)
 
-                parseDayWeather()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            })  { error -> error.printStackTrace() }
+                    parseDayWeather()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }) { error -> error.printStackTrace() }
         requestQueue!!.add(requestCity)
 
     }
@@ -254,10 +256,16 @@ class MainActivity : AppCompatActivity() {
                         Log.d("weatherData_item", item.toString())
                         weatherData.add(item)
 
-
                     }
+
+                    weatherAdapter = WeatherAdapter()
+
+                    recyclerView.adapter = weatherAdapter
+                    weatherAdapter.setList(weatherData)
+                    //weatherAdapter!!.setOnItemClickListener(WeatherAdapter, recyclerView,)
+
                     updateDayWeatherUi(0)
-                    updateUi()
+                    //updateUi()
 
 
                 } catch (e: JSONException) {
@@ -271,7 +279,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateDayWeatherUi(i: Int){
+    private fun updateDayWeatherUi(i: Int) {
         tempTextView!!.text = weatherData[i].currentTemp + "°"
         locationTextView!!.text = weatherData[i].city
         windSpeedTextView!!.text = weatherData[i].windSpeed + " m/s"
@@ -281,13 +289,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+/*
     private fun updateUi() {
-        todayTemp!!.text = weatherData[0].maxTemp + "° / " + weatherData[0].minTemp  + "°"
-        tomorrowTemp!!.text = weatherData[1].maxTemp + "° / " + weatherData[1].minTemp  + "°"
-        thirdTemp!!.text = weatherData[2].maxTemp + "° / " + weatherData[2].minTemp  + "°"
-        fourthTemp!!.text = weatherData[3].maxTemp + "° / " + weatherData[3].minTemp  + "°"
-        fifthTemp!!.text = weatherData[4].maxTemp + "° / " + weatherData[4].minTemp  + "°"
+        todayTemp!!.text = weatherData[0].maxTemp + "° / " + weatherData[0].minTemp + "°"
+        tomorrowTemp!!.text = weatherData[1].maxTemp + "° / " + weatherData[1].minTemp + "°"
+        thirdTemp!!.text = weatherData[2].maxTemp + "° / " + weatherData[2].minTemp + "°"
+        fourthTemp!!.text = weatherData[3].maxTemp + "° / " + weatherData[3].minTemp + "°"
+        fifthTemp!!.text = weatherData[4].maxTemp + "° / " + weatherData[4].minTemp + "°"
 
 
         todayDate!!.text = updateData(weatherData[0].time)
@@ -303,23 +311,25 @@ class MainActivity : AppCompatActivity() {
         updateIconUi(4, fifthPrecipitation)
 
 
-
         //_________________________________________
 
 
     }
-
+*/
     private fun updateIconUi(i: Int, icon: ImageView) {
-        Picasso.get().load("https://openweathermap.org/img/wn/"
-                + weatherData[i].icon + "@2x.png")
+        Picasso.get().load(
+            "https://openweathermap.org/img/wn/"
+                    + weatherData[i].icon + "@2x.png"
+        )
             .resize(100, 100).into(icon)
     }
 
-    private fun updateData(date : String): String {
+    private fun updateData(date: String): String {
         val splitDate = date.toString().split("-")
-        val month =  date(splitDate[1].toInt() - 1)
+        val month = date(splitDate[1].toInt() - 1)
         return month + ", " + splitDate[2]
     }
+
     //сделать кардВью, чтобы не указывать все функции отдельно
     fun makeToday(view: View) {
         updateDayWeatherUi(0)
@@ -330,13 +340,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun makeThird(view: View) {
-        updateDayWeatherUi(2)}
+        updateDayWeatherUi(2)
+    }
 
     fun makeFourth(view: View) {
-        updateDayWeatherUi(3)}
+        updateDayWeatherUi(3)
+    }
 
     fun makeFifth(view: View) {
-        updateDayWeatherUi(4)}
+        updateDayWeatherUi(4)
+    }
 
 
     private fun startLocationUpdates() {
@@ -397,7 +410,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (currentLocation != null) {
-                   latThis = currentLocation!!.latitude.toString()
+                    latThis = currentLocation!!.latitude.toString()
                     lonThis = currentLocation!!.longitude.toString()
                 }
             }
@@ -449,7 +462,7 @@ class MainActivity : AppCompatActivity() {
                         "MainActivity", "User has not agreed to change location" +
                                 "settings"
                     )
-                    updateUi()
+                    //updateUi()
                     //weather.lat = currentLocation!!.latitude
                     //weather.lon = currentLocation!!.longitude
                 }
@@ -480,7 +493,8 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION
         )
         if (shouldProvideRationale) {
-            showSnackBar("Location permission is needed for app functionality", "OK"
+            showSnackBar(
+                "Location permission is needed for app functionality", "OK"
             ) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf(
@@ -500,12 +514,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSnackBar(mainText: String, action: String, listener: View.OnClickListener) {
-        Snackbar.make( findViewById(android.R.id.content), mainText, Snackbar.LENGTH_INDEFINITE)
-            .setAction( action, listener).show()
+        Snackbar.make(findViewById(android.R.id.content), mainText, Snackbar.LENGTH_INDEFINITE)
+            .setAction(action, listener).show()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
@@ -538,12 +554,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun checkLocation(){
-        if(checkLocationPermission()){
+    private fun checkLocation() {
+        if (checkLocationPermission()) {
             startLocationUpdates()
         } else {
             DialogManager.openDialog(this,
-                object : DialogManager.Listener{
+                object : DialogManager.Listener {
 
                     override fun onClick(name: String?) {
                         startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -552,5 +568,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
 
