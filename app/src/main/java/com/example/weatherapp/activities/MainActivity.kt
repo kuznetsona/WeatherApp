@@ -11,16 +11,20 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.weatherapp.BuildConfig
+import com.example.weatherapp.DialogManager
 import com.example.weatherapp.R
 import com.example.weatherapp.date
 import com.example.weatherapp.model.Weather
@@ -31,6 +35,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.*
 import org.json.JSONException
 import java.nio.file.Files.size
 import java.text.DateFormat
@@ -53,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var windImageView: ImageView
     lateinit var windSpeedTextView: TextView
     lateinit var restartImageButton: ImageButton
+    lateinit var searchImageButton: ImageButton
 
     //_______________________________________
     lateinit var todayDate: TextView
@@ -73,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var fourthTemp: TextView
     lateinit var fifthTemp: TextView
     //_______________________________________
+    private var isLocationUpdatesActive = false
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var settingsClient: SettingsClient? = null
@@ -90,9 +97,14 @@ class MainActivity : AppCompatActivity() {
     private val weather = Weather()
 
     private var requestQueue: RequestQueue? = null
+    //private var requestQueueCity: RequestQueue? = null
 
     var weatherData: ArrayList<WeatherData> = arrayListOf()
 
+    lateinit var latThis: String
+    lateinit var lonThis: String
+
+    var locationCity = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         buildLocationRequest()
         buildLocationCallBack()
         buildLocationSettingsRequest()
+        startLocationUpdates()
 
 
         locationTextView = findViewById(R.id.locationTextView)
@@ -119,8 +132,8 @@ class MainActivity : AppCompatActivity() {
         windImageView = findViewById(R.id.windImageView)
         windSpeedTextView = findViewById(R.id.windSpeedTextView)
         restartImageButton = findViewById(R.id.restartImageButton)
-
-    //__________________________________________________________________________
+        searchImageButton = findViewById(R.id.searchImageButton)
+        //__________________________________________________________________________
         todayDate = findViewById(R.id.today_date)
         tomorrowDate = findViewById(R.id.tomorrow_date)
         thirdDate = findViewById(R.id.third_date)
@@ -138,71 +151,68 @@ class MainActivity : AppCompatActivity() {
         thirdTemp = findViewById(R.id.third_temp)
         fourthTemp = findViewById(R.id.fourth_temp)
         fifthTemp = findViewById(R.id.fifth_temp)
-    //__________________________________________________________________________
-
-
+        //__________________________________________________________________________
 
         requestQueue = Volley.newRequestQueue(this)
 
-        parseDayWeather()
-
-        restartImageButton.setOnClickListener(View.OnClickListener {
-
-            startLocationUpdates()
-
+        restartImageButton.setOnClickListener{
+            weatherData.clear()
             defineCity()
-            parseDayWeather()
-            updateDayWeatherUi(0)
-            updateUi()
 
-        })
+        }
+
+        searchImageButton.setOnClickListener{
+            weatherData.clear()
+            DialogManager.searchByNameDialog(this,
+                object : DialogManager.Listener{
+                    override fun onClick(name: String?) {
+                        if(name != null) {
+                            locationCity = name
+                            parseDayWeather()
+                        }
+                    }
+
+                })
+
+        }
 
 
 
 
     }
 
-    private fun parseLink(){
-        //Доделать!!
-        val city: String
-        url = "https://api.openweathermap.org/data/2.5/forecast?" +
-                "q=sochi,ru" +
-                "&units=metric" +
-                "&appid=e34e4c19711deb09f38f50619aa775c1"
-
-    }
-
-    private fun defineCity(){
-        // TODO()
-        val uriDefineCity = "http://api.openweathermap.org/geo/1.0/reverse?" +
+    private fun defineCity() {
+        val urlDefineCity = "https://api.openweathermap.org/geo/1.0/reverse?" +
                 "lat=" +
-                "59.9858968" +
+                latThis +
                 "&" +
                 "lon=" +
-                "30.3477361" +
+                lonThis +
                 "&appid=e34e4c19711deb09f38f50619aa775c1"
 
-        val requestCity = JsonObjectRequest(
+        val requestCity = JsonArrayRequest(
             Request.Method.GET,
-            uriDefineCity, null, { response ->
-                try {
-                    //Log.d("jsonCity", "hi")
-                    val jsonCity = response.getJSONArray("")
-                    Log.d("jsonCity", jsonCity.toString())
+            urlDefineCity, null, { response ->
+            try {
+                locationCity = response.getJSONObject(0).getString("name").toString()
+                Log.d("locationCity_defineCity", locationCity)
 
-                }
-                catch (e: JSONException) {
-                    Log.d("jsonCity", "Exception")
-                        e.printStackTrace()
-                    }
-                }) { error -> error.printStackTrace() }
-                requestQueue!!.add(requestCity)
-
+                parseDayWeather()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            })  { error -> error.printStackTrace() }
+        requestQueue!!.add(requestCity)
 
     }
 
     private fun parseDayWeather() {
-        parseLink()
+        url = "https://api.openweathermap.org/data/2.5/forecast?" +
+                "q=" +
+                locationCity +
+                "&units=metric" +
+                "&appid=e34e4c19711deb09f38f50619aa775c1"
+
 
         // выделить в разные функции парсирование и все остальное
         val request = JsonObjectRequest(
@@ -210,6 +220,7 @@ class MainActivity : AppCompatActivity() {
             url, null, { response ->
                 try {
                     val jsonArray = response.getJSONArray("list")
+                    Log.d("list", jsonArray.toString())
                     for (i in 0 until jsonArray.length() step 7) {
 
                         val item = WeatherData(
@@ -231,28 +242,35 @@ class MainActivity : AppCompatActivity() {
                                 .getString("temp_max").toFloat().toInt().toString(),
 
                             response.getJSONObject("city").getJSONObject("coord")
-                                .getString("lat").toFloat(),
+                                .getString("lat").toString(),
                             response.getJSONObject("city").getJSONObject("coord")
-                                .getString("lon").toFloat(),
+                                .getString("lon").toString(),
                             jsonArray.getJSONObject(i).getJSONObject("wind")
                                 .getString("speed").toFloat().toInt().toString(),
                             jsonArray.getJSONObject(i).getJSONArray("weather")
                                 .getJSONObject(0).getString("icon")
-                            )
+                        )
 
-                       weatherData.add(item)
+                        Log.d("weatherData_item", item.toString())
+                        weatherData.add(item)
+
 
                     }
+                    updateDayWeatherUi(0)
+                    updateUi()
 
 
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             }) { error -> error.printStackTrace() }
+
         requestQueue!!.add(request)
+        Log.d("weatherData", locationCity)
+        Log.d("weatherData", weatherData.toString())
 
     }
-    
+
     private fun updateDayWeatherUi(i: Int){
         tempTextView!!.text = weatherData[i].currentTemp + "°"
         locationTextView!!.text = weatherData[i].city
@@ -296,8 +314,6 @@ class MainActivity : AppCompatActivity() {
                 + weatherData[i].icon + "@2x.png")
             .resize(100, 100).into(icon)
     }
-
-
 
     private fun updateData(date : String): String {
         val splitDate = date.toString().split("-")
@@ -355,8 +371,8 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     if (currentLocation != null) {
-                        weather.lat = currentLocation!!.latitude
-                        weather.lon = currentLocation!!.longitude
+                        latThis = currentLocation!!.latitude.toString()
+                        lonThis = currentLocation!!.longitude.toString()
                     }
 
                 })
@@ -381,14 +397,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (currentLocation != null) {
-                    weather.lat = currentLocation!!.latitude
-                    weather.lon = currentLocation!!.longitude
+                   latThis = currentLocation!!.latitude.toString()
+                    lonThis = currentLocation!!.longitude.toString()
                 }
             }
 
         fusedLocationClient!!.removeLocationUpdates(locationCallback!!)
-            .addOnCompleteListener(this) {
-            }
+
 
     }
 
@@ -410,10 +425,10 @@ class MainActivity : AppCompatActivity() {
                 currentLocation = locationResult.lastLocation
                 //updateLocationUi()
 
-                weather.lat = currentLocation!!.latitude
-                weather.lon = currentLocation!!.longitude
+                latThis = currentLocation!!.latitude.toString()
+                lonThis = currentLocation!!.longitude.toString()
 
-                Log.d("cord_my", weather.lat.toString() + " / " + weather.lon.toString())
+                Log.d("cord_my", latThis + " / " + lonThis)
             }
         }
     }
@@ -490,7 +505,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray) {
+                                            grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
@@ -522,4 +537,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun checkLocation(){
+        if(checkLocationPermission()){
+            startLocationUpdates()
+        } else {
+            DialogManager.openDialog(this,
+                object : DialogManager.Listener{
+
+                    override fun onClick(name: String?) {
+                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                    }
+                })
+        }
+    }
 }
+
+

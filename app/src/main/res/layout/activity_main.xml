@@ -29,13 +29,15 @@
 
             >
 
-            <SearchView
-                android:id="@+id/searchView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                 />
 
+            <ImageButton
+                android:id="@+id/searchImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:paddingTop="10dp"
+                android:paddingStart="10dp"
+                app:srcCompat="@drawable/ic_baseline_search_24" />
 
             <ImageButton
                 android:id="@+id/restartImageButton"
@@ -78,7 +80,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="10dp"
                 android:text="20°"
                 android:textSize="55sp" />
 
