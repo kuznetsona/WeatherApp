@@ -34,7 +34,7 @@ import com.squareup.picasso.Picasso
 import org.json.JSONException
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
 
     companion object {
         private const val CHECK_SETTINGS_CODE = 111
@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 
 
         recyclerView = binding.weekRecyclerView
+
         //weatherAdapter = WeatherAdapter()
         //recyclerView.adapter = weatherAdapter
 
@@ -157,7 +158,10 @@ class MainActivity : AppCompatActivity() {
         fifthTemp = findViewById(R.id.fifth_temp)
         */
 
+
+
         requestQueue = Volley.newRequestQueue(this)
+
 
         restartImageButton.setOnClickListener {
             weatherData.clear()
@@ -258,7 +262,7 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-                    weatherAdapter = WeatherAdapter()
+                    weatherAdapter = WeatherAdapter(this)
 
                     recyclerView.adapter = weatherAdapter
                     weatherAdapter.setList(weatherData)
@@ -329,28 +333,6 @@ class MainActivity : AppCompatActivity() {
         val month = date(splitDate[1].toInt() - 1)
         return month + ", " + splitDate[2]
     }
-
-    //сделать кардВью, чтобы не указывать все функции отдельно
-    fun makeToday(view: View) {
-        updateDayWeatherUi(0)
-    }
-
-    fun makeTomorrow(view: View) {
-        updateDayWeatherUi(1)
-    }
-
-    fun makeThird(view: View) {
-        updateDayWeatherUi(2)
-    }
-
-    fun makeFourth(view: View) {
-        updateDayWeatherUi(3)
-    }
-
-    fun makeFifth(view: View) {
-        updateDayWeatherUi(4)
-    }
-
 
     private fun startLocationUpdates() {
         settingsClient!!.checkLocationSettings(locationSettingsRequest!!)
@@ -553,19 +535,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun checkLocation() {
-        if (checkLocationPermission()) {
-            startLocationUpdates()
-        } else {
-            DialogManager.openDialog(this,
-                object : DialogManager.Listener {
-
-                    override fun onClick(name: String?) {
-                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                    }
-                })
-        }
+    override fun onClick(weatherData: WeatherData, i: Int) {
+        updateDayWeatherUi(i)
     }
 }
 

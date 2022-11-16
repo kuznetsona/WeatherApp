@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:paddingTop="10dp"
-        android:onClick="makeToday"
+
         android:background="@color/background">
 
         <TextView
