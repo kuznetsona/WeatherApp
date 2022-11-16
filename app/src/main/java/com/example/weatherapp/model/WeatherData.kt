@@ -8,7 +8,7 @@ data class WeatherData(
     var currentTemp: String,
     var minTemp: String,
     var maxTemp: String,
-    var lat: String  ,
+    var lat: String,
     var lon: String,
     var windSpeed: String,
     var icon: String

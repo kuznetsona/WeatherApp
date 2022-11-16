@@ -37,7 +37,6 @@ object DialogManager {
         dialog.show()
     }
 
-
     interface Listener{
         fun onClick(name: String?)
     }

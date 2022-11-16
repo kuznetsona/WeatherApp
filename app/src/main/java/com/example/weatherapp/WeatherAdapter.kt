@@ -79,8 +79,6 @@ class WeatherAdapter(val listener: Listener)
     }
 
     override fun onBindViewHolder(weatherViewHolder: WeatherViewHolder, i: Int) {
-
-
         weatherViewHolder.bind(weather[i], listener)
 
     }
