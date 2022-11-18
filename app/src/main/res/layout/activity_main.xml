@@ -72,8 +72,7 @@
                 android:layout_height="110dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
-                android:src="@drawable/ic_baseline_wb_sunny_24"
-                 />
+                android:src="@drawable/ic_baseline_wb_sunny_24" />
 
             <TextView
                 android:id="@+id/tempTextView"
@@ -81,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="20°"
+                android:textStyle="bold"
                 android:textSize="55sp" />
 
             <TextView
@@ -130,12 +130,32 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/weekRecyclerView"
+        android:id="@+id/dayRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
+        android:backgroundTint="@color/night_background"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="8"
+        tools:listitem="@layout/day_recycler_view"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weekRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
         android:backgroundTint="@color/night_background"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
@@ -144,7 +164,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="5"
         tools:listitem="@layout/day_item"
-
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
     </androidx.recyclerview.widget.RecyclerView>

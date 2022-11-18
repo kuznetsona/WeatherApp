@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.BuildConfig
 import com.squareup.picasso.Picasso
 import org.json.JSONException
 
@@ -51,9 +52,12 @@ class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
     lateinit var restartImageButton: ImageButton
     lateinit var searchImageButton: ImageButton
 
-    lateinit var recyclerView: RecyclerView
-    lateinit var weatherAdapter: WeatherAdapter
+    private lateinit var recyclerWeekView: RecyclerView
+    private lateinit var weatherAdapter: WeatherAdapter
     var weatherData: ArrayList<WeatherData> = arrayListOf()
+
+    lateinit var recyclerHoursView: RecyclerView
+    lateinit var hoursWeatherAdapter: HoursWeatherAdapter
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var settingsClient: SettingsClient? = null
@@ -101,9 +105,11 @@ class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
         restartImageButton = findViewById(R.id.restartImageButton)
         searchImageButton = findViewById(R.id.searchImageButton)
 
-        recyclerView = binding.weekRecyclerView
+        recyclerWeekView = binding.weekRecyclerView
+        recyclerHoursView = binding.dayRecyclerView
 
         requestQueue = Volley.newRequestQueue(this)
+
 
         restartImageButton.setOnClickListener {
             weatherData.clear()
@@ -128,6 +134,8 @@ class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
 
 
     }
+
+
 
     private fun defineCity() {
         val urlDefineCity = "https://api.openweathermap.org/geo/1.0/reverse?" +
@@ -166,12 +174,12 @@ class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
                 try {
                     val jsonArray = response.getJSONArray("list")
 
-                    for (i in 0 until jsonArray.length() step 7) {
+                    for (i in 0 until jsonArray.length() step 8) {
 
                         val item = WeatherData(
                             response.getJSONObject("city").getString("name"),
                             jsonArray.getJSONObject(i).getString("dt_txt")
-                                .toString().split(" ")[0],
+                                .toString(),
                             jsonArray.getJSONObject(i).getJSONArray("weather")
                                 .getJSONObject(0).getString("main").toString(),
                             jsonArray.getJSONObject(i).getJSONArray("weather")
@@ -199,9 +207,15 @@ class MainActivity : AppCompatActivity() , WeatherAdapter.Listener{
 
                     }
 
+
                     weatherAdapter = WeatherAdapter(this)
-                    recyclerView.adapter = weatherAdapter
+                    recyclerWeekView.adapter = weatherAdapter
                     weatherAdapter.setList(weatherData)
+
+                    hoursWeatherAdapter = HoursWeatherAdapter(this)
+                    recyclerHoursView.adapter = hoursWeatherAdapter
+                    hoursWeatherAdapter.setList(weatherData)
+
                     updateDayWeatherUi(0)
 
                 } catch (e: JSONException) {

@@ -13,3 +13,4 @@ data class WeatherData(
     var windSpeed: String,
     var icon: String
 )
+
